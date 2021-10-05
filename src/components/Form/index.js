@@ -3,7 +3,7 @@ import { View,
          Text, 
          TextInput, 
          TouchableOpacity,
-         Vibration
+         Vibration,
          } from "react-native"; 
 import ResultImc from './ResultImc/';
 import styles from "./style";
@@ -23,45 +23,49 @@ function imcCalculator() {
     return setImc((weight/(height*height)).toFixed(2))
 }
 
+
 function verificationImc() {
-    if( imc == null) { 
+    if( imc === null) { 
         Vibration.vibrate();
         setErrorMessage('Campo Obrigatório*')
     }
 }
 
+function classImc() { 
+
+      if ( imc < 18.5) {
+        setTipoImc ('Abaixo do Peso')
+    } else if ( imc < 25) {
+        setTipoImc('Peso Normal')
+    } else if ( imc < 30 ) {
+        setTipoImc('Sobrepeso')
+    } else if (imc < 35) {
+        setTipoImc('Obesidade Grau I')
+    } else if (imc < 40){
+        setTipoImc('Obesidade Grau II')
+    } else {
+        setTipoImc('Obesidade Mórbida! Cuidado!')
+    } 
+    return
+
+
+}
 function validationImc() {
     if (weight != null && height != null){
         imcCalculator()
+        classImc()
         setHeight(null)
         setWeight(null)
         setMessageImc('Seu Imc é Igual: ')
         setTextButton('Calcular novamente')
         setErrorMessage(null)
-
         return
     }
+    setTipoImc(null)
     verificationImc()
     setImc(null)
     setTextButton("Calcular")
     setMessageImc('Preencha seu peso e altura')
-}
-
-function classImc() { 
-    if ( imc < 18.5) {
-        setTipoImc('Abaixo do Peso')
-    } if  (imc => 18.5 || imc <= 24.9) {
-        setTipoImc('Peso Normal') 
-    } if (imc => 25 || imc <= 29.9 ) {
-        setTipoImc('Sobrepeso')
-    } if (imc => 30 || imc <= 34.9) {
-        setTipoImc('Obesidade Grau I')
-    } if (imc => 35 || imc <= 39.9){
-        setTipoImc('Obesidade Grau II')
-    } if (imc => 40) {
-        setTipoImc('Obesidade Mórbida! Cuidado!')
-    }
-    return
 }
 
 
@@ -96,6 +100,7 @@ return(
                 <ResultImc 
                 messageResultImc = {messageImc}
                 resultImc={imc}
+                classificationImc = {tipoImc}
 
                 />
             </View>
